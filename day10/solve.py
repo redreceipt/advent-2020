@@ -20,24 +20,30 @@ def two():
     adapters.insert(0, 0)
     adapters.append(max(adapters) + 3)
     adapters.sort()
-    chains = []
+    branches = {}
+    num_paths = 1
 
-    def make_arrangements(path):
-        ndx = adapters.index(path[-1])
+    for adapter in adapters:
         next_adapters = [
-            adapter for adapter in adapters[ndx + 1:]
-            if adapter - path[-1] <= 3
+            next_adapter for next_adapter in adapters
+            if next_adapter > adapter and next_adapter - adapter <= 3
         ]
-        for joltage in next_adapters:
-            new_path = path + (joltage, )
-            if joltage == adapters[-1]:
-                chains.append(new_path)
-            make_arrangements(new_path)
+        num_paths += len(next_adapters) - num_paths
+        branches[adapter] = next_adapters
 
-    make_arrangements((0, ))
-    return len(chains)
+    def find_options(adapter):
+        nonlocal num_paths
+        options = branches[adapter]
+        if not len(options):
+            return
+        num_paths += len(options) - 1
+        for option in options:
+            find_options(option)
+
+    find_options(0)
+    return num_paths + 1
 
 
-adapters = [int(line.strip()) for line in open("input.txt").readlines()]
+adapters = [int(line.strip()) for line in open("example.txt").readlines()]
 print(one())
 print(two())
