@@ -34,16 +34,17 @@ def two():
     def find_options(adapter):
         nonlocal num_paths
         options = branches[adapter]
-        if not len(options):
+        if not (len(options)):
             return
-        num_paths += len(options) - 1
+        num_paths -= 1
         for option in options:
+            num_paths += 1
             find_options(option)
 
     find_options(0)
     return num_paths + 1
 
 
-adapters = [int(line.strip()) for line in open("example.txt").readlines()]
+adapters = [int(line.strip()) for line in open("example2.txt").readlines()]
 print(one())
 print(two())
