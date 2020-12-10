@@ -17,19 +17,20 @@ def one():
 
 
 def two():
-    my_adapter = max(adapters) + 3
-    adapters.append(my_adapter)
+    adapters.insert(0, 0)
+    adapters.append(max(adapters) + 3)
+    adapters.sort()
     chains = []
 
     def make_arrangements(path):
-        highest = path[-1]
+        ndx = adapters.index(path[-1])
         next_adapters = [
-            joltage for joltage in adapters
-            if joltage - highest <= 3 and joltage - highest > 0
+            adapter for adapter in adapters[ndx + 1:]
+            if adapter - path[-1] <= 3
         ]
         for joltage in next_adapters:
             new_path = path + (joltage, )
-            if joltage == my_adapter:
+            if joltage == adapters[-1]:
                 chains.append(new_path)
             make_arrangements(new_path)
 
@@ -37,6 +38,6 @@ def two():
     return len(chains)
 
 
-adapters = [int(line.strip()) for line in open("example.txt").readlines()]
+adapters = [int(line.strip()) for line in open("input.txt").readlines()]
 print(one())
 print(two())
